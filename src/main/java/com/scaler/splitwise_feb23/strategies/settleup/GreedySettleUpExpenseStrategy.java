@@ -43,8 +43,8 @@ public class GreedySettleUpExpenseStrategy implements SettleUpExpensesStrategy {
             }
         }
 
-        Queue<Record> negativeQueue = new ArrayDeque<>();
-        Queue<Record> positiveQueue = new ArrayDeque<>();
+        Queue<Record> negativeQueue = new ArrayDeque<>(); // This queue will contain the amount had to pay by the users.
+        Queue<Record> positiveQueue = new ArrayDeque<>(); // This queue will contain the amount paid extra by the users.
 
         for (User user: extraMoney.keySet()) {
             if (extraMoney.get(user) < 0) {
@@ -58,10 +58,14 @@ public class GreedySettleUpExpenseStrategy implements SettleUpExpensesStrategy {
 
         //negative(A) = -150 -> -150+100 = -50
         //positive(B) = +100 -> 0
-        //Transaction  : A  -----> B : 50
+        //Transaction  : A  -----> B : 100
+
+        //negative(A) = - 80 -> 0
+        //positive(B) = +100
+        //Transaction : A ---------> B : 80
         while (!positiveQueue.isEmpty() && !negativeQueue.isEmpty()) {
-            Record firstNegative = negativeQueue.remove();
-            Record firstPostive = positiveQueue.remove();
+            Record firstNegative = negativeQueue.remove(); // user paid lesser.
+            Record firstPostive = positiveQueue.remove(); // user paid extra.
 
             if (firstPostive.pendingAmount > Math.abs(firstNegative.pendingAmount)) {
                 transactions.add(
